@@ -39,6 +39,10 @@ class UserProfile extends Component {
           <strong>Admin:</strong>{" "}
           {currentUser.isAdmin ? "Yes" : "No" }
         </p>
+        <p>
+          <strong>Avatars:</strong>{" "}
+          {currentUser.avatars}
+        </p>
       </div>
     );
   }

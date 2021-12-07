@@ -25,7 +25,6 @@ const Navbar = (props) => {
   };
 
   const handleCloseNavMenu = (event) => {
-    // console.log(event.currentTarget);
     setAnchorElNav(null);
   };
 
@@ -141,7 +140,7 @@ const Navbar = (props) => {
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: `${ currentUser ? 'flex' : 'none' }`}}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Niftyheads" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={currentUser ? currentUser.username : "Niftyheads"} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
