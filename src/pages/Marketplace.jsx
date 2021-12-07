@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AvatarCard from './AvatarCard'
+import AvatarCard from '../components/marketplace/AvatarCard'
 
 const Marketplace = (props) => {
 

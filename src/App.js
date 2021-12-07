@@ -1,46 +1,126 @@
-import React, { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import React, { Component } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import axios from 'axios'
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-import fire from './firebase.js'
+import "bootstrap/dist/css/bootstrap.min.css"
 
-import Test from './components/Test'
+import AuthService from "./services/authService"
 import Navbar from './components/Navbar'
-import Login from './components/authentication/Login'
-import Signup from './components/authentication/Signup'
-import Marketplace from './components/marketplace/Marketplace'
+
+import Home from './pages/Home'
+import Login from './pages/authentication/Login'
+import Register from './pages/authentication/Register'
+import Marketplace from './pages/Marketplace'
+import UserProfile from './pages/UserProfile'
+import BoardUser from './components/BoardUser'
+import BoardAdmin from './components/BoardAdmin'
 
 const SERVER_URL = "http://localhost:5000/"
 
-function App() {
+class App extends Component {
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
 
-  fire.auth().onAuthStateChanged((user) => {
-     return user ? setIsLoggedIn(true) : setIsLoggedIn(false);
-  });
+    this.state = {
+      showAdminBoard: false,
+      currentUser: undefined,
+    };
+  }
 
-  console.log('logged in?', isLoggedIn);
+  componentDidMount() {
+    const user = AuthService.getCurrentUser();
 
-  return (
-    <div className="App">
-      <Navbar/>
-      <Routes>
-        {/* <Route path="/" element={<Test />} /> */}
-        {!isLoggedIn
-          ?
-            <Route path="/" element={<Login />} />
-          : (
-            <>
-              <Route path="/" element={<Marketplace />} />
-            </>
+    if (user) {
+      this.setState({
+        currentUser: user,
+        showAdminBoard: user.isAdmin
+      });
+    }
+  }
+
+  logOut() {
+    console.log('logout triggered')
+    AuthService.logout();
+  }
+
+  render() {
+    const { currentUser, showAdminBoard } = this.state;
+    return (
+      <div className="App">
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <Link to={"/"} className="navbar-brand">
+            bezKoder
+          </Link>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/home"} className="nav-link">
+                Home
+              </Link>
+            </li>
+
+            {showAdminBoard && (
+              <li className="nav-item">
+                <Link to={"/admin"} className="nav-link">
+                  Admin
+                </Link>
+              </li>
+            )}
+
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/user"} className="nav-link">
+                  User
+                </Link>
+              </li>
+            )}
+          </div>
+
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/profile"} className="nav-link">
+                  {currentUser.username}
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="/login" className="nav-link" onClick={this.logOut}>
+                  LogOut
+                </a>
+              </li>
+            </div>
+          ) : (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link">
+                  Login
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link">
+                  Sign Up
+                </Link>
+              </li>
+            </div>
           )}
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-    </div>
-  );
+        </nav>
+
+        <Navbar currentUser={currentUser} onLogOut={this.logOut} />
+        <div className="container mt-3">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/user" element={<BoardUser />} />
+            <Route path="/admin" element={<BoardAdmin />} />
+          </Routes>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;

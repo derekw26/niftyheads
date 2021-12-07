@@ -12,12 +12,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import logout from './authentication/logout.js';
 
-const pages = ['Marketplace', 'Create Avatar', 'My Avatars', 'Cart'];
-const settings = ['Profile', 'Logout'];
-
-const Navbar = () => {
+const Navbar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -29,7 +25,7 @@ const Navbar = () => {
   };
 
   const handleCloseNavMenu = (event) => {
-    console.log(event.currentTarget);
+    // console.log(event.currentTarget);
     setAnchorElNav(null);
   };
 
@@ -37,11 +33,30 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  const logOut = props.onLogOut;
+
   const handleDropdownClick = (setting) => {
     if (setting === "Logout") {
-      logout()
+      logOut();
     }
   };
+
+  const currentUser = props.currentUser;
+
+
+  let pages = ['Marketplace', 'Create Avatar', 'My Avatars'];
+  if (!currentUser) {
+    pages = ['Home', 'Marketplace'];
+  } else if (currentUser.isAdmin) {
+    pages = [...pages, 'All Users'];
+  }
+
+  let settings = ['Profile', 'Logout'];
+  if (!currentUser) {
+    settings = ['Register', 'Login'];
+  }
+
+  console.log(currentUser);
 
   return (
     <AppBar position="static">
@@ -53,7 +68,9 @@ const Navbar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            NIFTYHEADS
+            <Link to={"/"} style={{ textDecoration: 'none', color: 'white' }}>
+              NIFTYHEADS
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -87,7 +104,10 @@ const Navbar = () => {
             >
               {pages.map((page) => (
                 <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none' }}>
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 </Link>
@@ -100,11 +120,13 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            NIFTYHEADS
+            <Link to={"/"} style={{ textDecoration: 'none', color: 'white' }}>
+              NIFTYHEADS
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/${page.toLowerCase()}`}>
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
@@ -116,10 +138,10 @@ const Navbar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: `${ currentUser ? 'flex' : 'none' }`}}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Niftyheads" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -127,30 +149,45 @@ const Navbar = () => {
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                  vertical: 'top',
+                  horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                  vertical: 'top',
+                  horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={handleCloseNavMenu}
-                >
-                  <Typography
-                    onClick={() => handleDropdownClick(setting)} textAlign="center"
+                <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                  <MenuItem
+                    key={setting}
+                    onClick={handleCloseNavMenu}
                   >
-                    {setting}
-                  </Typography>
-                </MenuItem>
+                    <Typography
+                      onClick={() => handleDropdownClick(setting)} textAlign="center"
+                    >
+                      {setting}
+                    </Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md:`${ currentUser ? 'none' : 'flex' }` }, flexDirection: 'row-reverse'}}>
+            {settings.map((setting) => (
+              <Link to={`/${setting.toLowerCase()}`}>
+                <Button
+                  key={setting}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {setting}
+                </Button>
+              </Link>
+            ))}
           </Box>
         </Toolbar>
       </Container>
