@@ -1,10 +1,11 @@
+
 .FormGroup {
 	margin: 0 15px 20px;
 	padding: 0;
-	border-style: none;
-	background-color: #7795f8;
+	border-style: inset;
+	background-color: #fff;
 	will-change: opacity, transform;
-	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #829fff;
+	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #333;
 	border-radius: 4px;
 }
 
@@ -14,7 +15,8 @@
 	-ms-flex-align: center;
 	align-items: center;
 	margin-left: 15px;
-	border-top: 1px solid #819efc;
+	border-top: 1px solid #79B197;
+	color: black;
 }
 
 .StripeElement--webkit-autofill {
@@ -32,8 +34,8 @@
 	width: calc(100% - 30px);
 	height: 40px;
 	margin: 40px 15px 0;
-	background-color: lightblue;
-	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 azure;
+	background-color: #aefdd8;
+	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #79B197;
 	border-radius: 4px;
 	color: #333;
 	font-weight: 600;
@@ -44,8 +46,16 @@
 }
 
 .payButton:active {
-	background-color: #7777cc;
+	background-color: #79B197;
   color: #fff;
-	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 darkblue;
+	box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #79B197;
 	transform: scale(0.99);
+}
+
+#paymentheader {
+	margin-bottom: 30px;
+}
+
+.paymenttext {
+	text-align: center;
 }

@@ -4,9 +4,7 @@ import AvatarCard from '../components/marketplace/AvatarCard';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Filter from '../components/marketplace/Filter';
-import LoadingCircle from '../components/LoadingCircle';
 import Typography from '@mui/material/Typography';
-// import Skeleton from '@mui/material/Skeleton';
 import './Marketplace.css'
 
 const SERVER_URL = "http://localhost:5000/"
@@ -26,9 +24,6 @@ const Marketplace = (props) => {
     });
   }, []);
 
-
-
-
   const selectedCollections = (values) => {
     setCollections(values);
 
@@ -39,18 +34,33 @@ const Marketplace = (props) => {
   }
 
 
-  avatars.forEach(avatar => {
-    if (collections.includes(avatar.category)
-    && avatar.price > priceRange[0]
-    && avatar.price < priceRange[1]
-    && avatar.listed) {
-      displayAvatars.push(
-        <Grid item xs={12} sm={12} md={6} lg={4}>
-          <AvatarCard avatar={avatar} />
-        </Grid>
-      );
-    }
-  })
+  if (collections.length === 1) {
+    avatars.forEach(avatar => {
+      if (avatar.listed) {
+        displayAvatars.push(
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <AvatarCard avatar={avatar} />
+          </Grid>
+        );
+      }
+    })
+
+  } else {
+    avatars.forEach(avatar => {
+      if (collections.includes(avatar.category)
+      && avatar.price > priceRange[0]
+      && avatar.price < priceRange[1]
+      && avatar.listed) {
+        displayAvatars.push(
+          <Grid item xs={12} sm={12} md={6} lg={4}>
+            <AvatarCard avatar={avatar} />
+          </Grid>
+        );
+      }
+    })
+  }
+
+
 
   return(
     <div>

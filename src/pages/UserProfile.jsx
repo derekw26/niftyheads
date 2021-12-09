@@ -28,40 +28,51 @@ class UserProfile extends Component {
       )
     })
 
+    console.log(avatars)
+
     return (
           <Box sx={{ flexGrow: 1 }}>
-            <div>
-              <Typography>
-                <header className="jumbotron">
-                  <h1>
-                    <strong>{currentUser.username}{"'s"}</strong> Profile
-                  </h1>
-                </header>
-                <p>
-                  <strong>Token:</strong>{" "}
-                  {currentUser.accessToken.substring(0, 20)} ...{" "}
-                  {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
-                </p>
-                <p>
-                  <strong>Wallet ID:</strong>{" "}
-                  {currentUser.uuid}
-                </p>
-                <p>
-                  <strong>Email:</strong>{" "}
-                  {currentUser.email}
-                </p>
-                <p>
-                  <strong>Admin:</strong>{" "}
-                  {currentUser.isAdmin ? "Yes" : "No" }
-                </p>
 
-                <h3><strong>Avatars Owned</strong>{" "}</h3>
+            <Typography>
+              <header className="jumbotron">
+                <h1>
+                  <strong>{currentUser.username}{"'s"}</strong> Profile
+                </h1>
+              </header>
+              { currentUser.isAdmin ?
+                <>
+                  <p>
+                    <strong>ADMINISTRATOR</strong>{" "}
+                  </p>
+                  <p>
+                    <strong>Token:</strong>{" "}
+                    {currentUser.accessToken.substring(0, 20)} ...{" "}
+                    {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+                  </p>
+                </>
+              : null }
+              <p>
+                <strong>Wallet ID:</strong>{" "}
+                {currentUser.uuid}
+              </p>
+              <p>
+                <strong>Email:</strong>{" "}
+                {currentUser.email}
+              </p>
+              <h3><strong>Avatars Owned</strong>{" "}</h3>
             </Typography>
-            <Grid container xs={12} rowSpacing={1} columnSpacing={{ xs: 1, sm: 1, md: 2, lg: 3 }}>
-              { avatars }
+            <Grid mt={{ xs:2 }} container xs={12} rowSpacing={1} columnSpacing={{ xs: 1, sm: 1, md: 2, lg: 3 }}>
+              { avatars.length ?
+              avatars :
+              <Grid item xs={12} style={{ display: "flex", alignItems: "center" }}>
+                <Typography>
+                  <p>
+                    None, purchase some from the marketplace!
+                  </p>
+                </Typography>
+              </Grid>
+              }
             </Grid>
-
-          </div>
           </Box>
     );
   }

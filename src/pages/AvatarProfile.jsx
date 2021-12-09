@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import LoadingCircle from '../components/LoadingCircle';
+import Paper from '@mui/material/Paper';
+
 
 const SERVER_URL = "http://localhost:5000/"
 
@@ -18,26 +21,60 @@ const AvatarProfile = (props) => {
 
   const avatarUuid = useParams().uuid
   const currentUser = props.currentUser;
-  // const location = useLocation();
-  // const { avatar } = location.state;
 
-  const [avatar, setAvatar] = useState({});
+
+  const [avatar, setAvatar] = useState(null);
   const [creator, setCreator] = useState({});
   const [ethToAudRate, setEthToAudRate] = useState(Infinity);
   const [audPrice, setAudPrice] = useState(Infinity);
+  const [listingPrice, setListingPrice] = useState(0);
+
+  const handleListingPrice = (e) => {
+    setListingPrice(e.target.value);
+    console.log(e.target.value)
+  }
+
+  const handleList = () => {
+    axios.put(`${SERVER_URL}avatars/${avatarUuid}`, {
+      "listed": true,
+      "price": listingPrice
+    })
+    alert(`Avatar listed for ${listingPrice} ETH`);
+    setAvatar(
+      {
+        ...avatar,
+        "listed": true,
+        "price": listingPrice
+      }
+    );
+  }
+
+  const handleUnlist = () => {
+    axios.put(`${SERVER_URL}avatars/${avatarUuid}`, {
+      "listed": false,
+      "price": null
+    })
+    alert(`Avatar unlisted from marketplace`);
+    setAvatar(
+      {
+        ...avatar,
+        "listed": false,
+        "price": null
+      }
+    );
+  }
 
   useEffect(() => {
     axios(`${SERVER_URL}avatars/${avatarUuid}`)
       .then(responseAvatar => {
         setAvatar(responseAvatar.data);
-        console.log(responseAvatar.data.createdBy)
         return axios(`${SERVER_URL}users/${responseAvatar.data.createdBy}`)
       })
       .then(responseCreator => {
         setCreator(responseCreator.data);
       })
       .catch(error => console.log(error.response))
-  }, []);
+  }, [avatarUuid]);
 
   useEffect(() => {
     axios('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=aud').then(res => {
@@ -45,44 +82,98 @@ const AvatarProfile = (props) => {
     })
   }, []);
 
+
   useEffect(() => {
-    setAudPrice(dollarAULocale.format(Number(avatar.price * ethToAudRate).toFixed(2)));
-  }, [setEthToAudRate, creator]);
+    if (!avatar) {
+      return;
+    } else {
+      setAudPrice(dollarAULocale.format(Number(avatar.price * ethToAudRate).toFixed(2)));
+    }
+  }, [ethToAudRate, creator, avatar]);
 
-  console.log(audPrice)
 
-  // console.log(avatar.user.uuid)
-  // console.log(currentUser.uuid)
+  const avatarControls = []
 
-  const controlsToListAvatar = () => {
-    console.log('can be listed')
-    if (avatar.user.uuid === currentUser.uuid) {
-      return (
-        <h1>this avatar can be listed</h1>
+  if (!avatar) {
+    return <LoadingCircle />
+  } else if (avatar.user.uuid === currentUser.uuid) {
+
+    if (!avatar.listed) {
+      avatarControls.push(
+        <>
+          <TextField
+            id="listing-price"
+            value={listingPrice}
+            label="ETH"
+            type="number"
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={handleListingPrice}
+            sx={ { marginRight: '10px' }}
+          />
+          <Button size="large" onClick={handleList} style={{ textDecoration: 'none' }}>
+            <Link
+              to={`/avatars/${avatar.uuid}`}
+              style={{ textDecoration: 'none' }}
+            >
+              LIST ON MARKETPLACE
+            </Link>
+          </Button>
+        </>
+      );
+    } else {
+      avatarControls.push(
+          <Button size="large" onClick={handleUnlist} style={{ textDecoration: 'none' }}>
+            <Link
+              to={`/avatars/${avatar.uuid}`}
+              style={{ textDecoration: 'none' }}
+            >
+              UNLIST
+            </Link>
+          </Button>
       )
     }
+
+  } else {
+    avatarControls.push(
+      <Button size="large">
+        { avatar ?
+          ( avatar.listed ?
+            <Link to={`/avatars/${avatar.uuid}/pay`} state={{ amount:audPrice, avatar:avatar }} style={{ textDecoration: 'none' }}>
+              PURCHASE
+            </Link>
+          : "NOT FOR SALE" )
+        : null }
+      </Button>
+    )
   }
 
+
   return(
-    <Grid container spacing={2} columns={{ xs: 6, sm: 6, md: 12 }}>
+    <Grid sx={{ marginTop:'40px'}} container spacing={2} columns={{ xs: 6, sm: 6, md: 12 }}>
       <Grid item xs={6} sm={6} md={6}>
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <img src={avatar.url} alt=""/>
-          </CardContent>
-        </Card>
+        <Paper elevation={5}>
+          <Card sx={{ minWidth: 275 }}>
+            <CardContent>
+              <img src={ avatar ? avatar.url : null } alt=""/>
+            </CardContent>
+          </Card>
+        </Paper>
       </Grid>
+
       <Grid item xs={6} sm={6} md={6}>
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-              Collection: { avatar.category }
+              Collection: { avatar ? avatar.category : null }
             </Typography>
             <Typography variant="h5" component="div">
-              { avatar.name }
+              { avatar ? avatar.name : null }
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              Minted by: { creator.username }
+              Minted by: { creator ? creator.username : null }
             </Typography>
             <Typography variant="body2">
               <p>
@@ -93,27 +184,23 @@ const AvatarProfile = (props) => {
               </p>
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              Owned by: { avatar.user ? avatar.user.username : null }
+              Contract: { avatar ? avatar.uuid : null }
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              Owned by: { avatar ? avatar.user.username : null }
             </Typography>
             <Typography sx={{ mb: 1.5 }}>
-              <a href="https://etherscan.io/token/0x3B3ee1931Dc30C1957379FAc9aba94D1C48a5405?a=115386" target="_blank">View On Etherscan</a>
+              <a href="https://etherscan.io/token/0x3B3ee1931Dc30C1957379FAc9aba94D1C48a5405?a=115386" target="_blank" rel="noreferrer">View On Etherscan</a>
             </Typography>
             <Typography variant="h6" component="div">
-              { avatar.listed ? `${ avatar.price } ETH`: null }
+              { avatar ? (avatar.listed ? `${ avatar.price } ETH`: null) : null }
             </Typography>
             <Typography variant="p" component="div">
-              { avatar.listed ? `= ${ audPrice } AUD`: null }
+              { avatar ? (avatar.listed ? `= ${ audPrice } AUD`: null) : null }
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="large">
-              { avatar.listed ?
-                <Link to={`/avatars/${avatar.uuid}/pay`} state={{ amount:audPrice, avatar:avatar }}>
-                  PURCHASE
-                </Link>
-              : "NOT FOR SALE"}
-            </Button>
-            { controlsToListAvatar }
+            { avatarControls }
           </CardActions>
         </Card>
       </Grid>

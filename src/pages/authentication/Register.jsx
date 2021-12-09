@@ -1,19 +1,15 @@
 import React, { Component } from 'react';
-import { Grid, Paper, Avatar, TextField, Button, Typography, Link } from '@mui/material';
+import { Grid, Paper, Avatar, TextField, Button, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
-import axios from 'axios';
 
 import Form from "react-validation/build/form";
-import { form, control, button } from 'react-validation';
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
 
 import AuthService from "../../services/authService";
 
-const paperStyle={padding :20, height:'70%', width:280, margin:"20px auto"}
+const paperStyle={padding:20, height:'70%', width:280, margin:"50px auto"}
 const avatarStyle={backgroundColor:'primary', margin: "10px auto"}
 const btnstyle={margin:'8px 0'}
 
@@ -152,7 +148,7 @@ class Register extends Component {
               margin='normal'
               fullWidth
               required
-              error={this.state.username === "" && this.state.submitClicked || usernameHelper }
+              error={(this.state.username === "" && this.state.submitClicked) || usernameHelper }
               helperText={usernameHelper}
 
             />
@@ -166,7 +162,7 @@ class Register extends Component {
               type='email'
               fullWidth
               required
-              error={this.state.email === "" && this.state.submitClicked || emailHelper }
+              error={(this.state.email === "" && this.state.submitClicked) || emailHelper }
               helperText={emailHelper}
             />
             <TextField
@@ -179,7 +175,7 @@ class Register extends Component {
               type='password'
               fullWidth
               required
-              error={this.state.password === "" && this.state.submitClicked || passwordHelper }
+              error={(this.state.password === "" && this.state.submitClicked) || passwordHelper }
               helperText={passwordHelper}
             />
             <Button

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../logo.png'
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -27,26 +29,22 @@ const Navbar = (props) => {
 
   const handleCloseNavMenu = (event) => {
     setAnchorElNav(null);
+    if(event.target.innerText === "Logout") {
+      console.log(logOut)
+      logOut();
+    }
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+
   };
-
-
-
-  // const handleDropdownClick = (setting) => {
-  //   if (setting === "Logout") {
-  //     logOut();
-  //   }
-  // };
 
   const currentUser = props.currentUser;
 
-
   let pages = ['Marketplace', 'Mint Avatar', 'Connect Wallet'];
   if (!currentUser) {
-    pages = [];
+    pages = ['Home'];
   } else if (currentUser.isAdmin) {
     pages = [...pages, 'Admin'];
   }
@@ -57,7 +55,7 @@ const Navbar = (props) => {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -67,7 +65,7 @@ const Navbar = (props) => {
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             <Link to={"/"} style={{ textDecoration: 'none', color: 'white' }}>
-              NIFTYHEADS
+              <img src={logo} alt="NIFTYHEADS" height="40px"/>
             </Link>
           </Typography>
 
@@ -101,7 +99,7 @@ const Navbar = (props) => {
               }}
             >
               {pages.map((page) => (
-                <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
                   <MenuItem
                     key={page}
                     onClick={handleCloseNavMenu}
@@ -119,23 +117,39 @@ const Navbar = (props) => {
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             <Link to={"/"} style={{ textDecoration: 'none', color: 'white' }}>
-              NIFTYHEADS
+              <img src={logo} alt="NIFTYHEADS" height="40px"/>
             </Link>
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+          { currentUser ?
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none'}} >
+                  <Button
+                    key={page}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'black', display: 'block' }}
+                  >
+                    {page}
+                  </Button>
+                </Link>
+              ))}
+            </Box>
+          :
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'none' } }}>
             {pages.map((page) => (
-              <Link to={`/${page.toLowerCase()}`}>
+              <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none'}} >
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: 'black', display: 'block' }}
                 >
                   {page}
                 </Button>
               </Link>
             ))}
           </Box>
-
+          }
           <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: `${ currentUser ? 'flex' : 'none' }`}}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -159,7 +173,7 @@ const Navbar = (props) => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                // <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
                   <MenuItem
                     key={setting}
                     onClick={handleCloseNavMenu}
@@ -170,17 +184,17 @@ const Navbar = (props) => {
                       {setting}
                     </Typography>
                   </MenuItem>
-                // </Link>
+                </Link>
               ))}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md:`${ currentUser ? 'none' : 'flex' }` }, flexDirection: 'row-reverse'}}>
             {settings.map((setting) => (
-              <Link to={`/${setting.toLowerCase()}`}>
+              <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
                 <Button
                   key={setting}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: 'black', display: 'block' }}
                 >
                   {setting}
                 </Button>

@@ -4,16 +4,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Alert from '@mui/material/Alert';
-import axios from 'axios';
 import withNavigation from '../../hocs';
 
 import Form from "react-validation/build/form";
-import { form, control, button } from 'react-validation';
 import CheckButton from "react-validation/build/button";
 
 import AuthService from "../../services/authService";
 
-const paperStyle={padding :20, height:'70%', width:280, margin:"20px auto"}
+const paperStyle={padding:20, height:'70%', width:280, margin:"50px auto"}
 const avatarStyle={backgroundColor:'primary', margin: "10px auto"}
 const btnstyle={margin:'8px 0'}
 
@@ -97,7 +95,7 @@ class Login extends Component {
           <Grid align='center'>
             <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
             <Typography>
-              <h3>Sign In</h3>
+              <h3>Login to NIFTYHEADS</h3>
             </Typography>
           </Grid>
           <Form
@@ -155,7 +153,7 @@ class Login extends Component {
               {this.state.loading ? (
                 <span className="spinner-border spinner-border-sm m-1"></span>
               ) : (
-                <span>Sign In</span>
+                <span>Login</span>
               )}
             </Button>
             <CheckButton
@@ -167,7 +165,7 @@ class Login extends Component {
           </Form>
           <Typography variant="body2">
             <span>Don't have an account? </span>
-            <Link href="/register" >
+            <Link href="/register"  >
               Sign Up
             </Link>
           </Typography>

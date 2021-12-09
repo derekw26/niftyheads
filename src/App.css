@@ -3,3 +3,13 @@
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap');
+
+h1 {
+  padding: 25px 0 15px 0 ;
+}
+
+.jumbotron {
+  margin-top: 50px;
+  -ms-align-items: center;
+  align-items: center;
+}

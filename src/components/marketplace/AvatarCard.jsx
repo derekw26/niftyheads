@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
@@ -19,11 +19,12 @@ const AvatarCard = (props) => {
   const avatar = props.avatar;
 
   return (
-    <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
+    <Paper elevation={5} sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item>
           <Link
             to={`/avatars/${avatar.uuid}`}
+            state={{ avatar: avatar }}
           >
             <ButtonBase sx={{ width: 128, height: 128 }}>
               <Img alt="complex" src={ avatar.url } />
@@ -34,18 +35,21 @@ const AvatarCard = (props) => {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                { avatar.name }
+                <strong>{ avatar.name }</strong>
               </Typography>
               <Typography variant="body2" gutterBottom>
-                { avatar.category } • JPEG
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Contract: { avatar.uuid }
+                { avatar.category }
               </Typography>
             </Grid>
             <Grid item>
               <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                Inspect
+                <Link
+                  to={`/avatars/${avatar.uuid}`}
+                  state={{ avatar: avatar }}
+                  style={{ textDecoration: 'none' }}
+                >
+                  Inspect
+                </Link>
               </Typography>
             </Grid>
           </Grid>

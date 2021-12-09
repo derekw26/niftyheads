@@ -9,18 +9,18 @@ const CARD_OPTIONS = {
 	iconStyle: "solid",
 	style: {
 		base: {
-			iconColor: "#c4f0ff",
-			color: "#fff",
+			iconColor: 'black',
+			color: "black",
 			fontWeight: 500,
 			fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
 			fontSize: "16px",
 			fontSmoothing: "antialiased",
-			":-webkit-autofill": { color: "#fce883" },
-			"::placeholder": { color: "#87bbfd" }
+			":-webkit-autofill": { color: "#444" },
+			"::placeholder": { color: "#999" }
 		},
 		invalid: {
-			iconColor: "#ffc7ee",
-			color: "#ffc7ee"
+			iconColor: "#d32f2f",
+			color: "#d32f2f"
 		}
 	}
 }
@@ -68,6 +68,7 @@ export default function PaymentForm(props) {
             "userId": currentUser.id
           });
 
+					avatar.listed = false;
           currentUser.avatars.push(avatar);
           localStorage.setItem("user", JSON.stringify(currentUser));
 
@@ -86,7 +87,8 @@ export default function PaymentForm(props) {
     <>
       {!success ?
         <form onSubmit={handleSubmit}>
-          <h1>Submitting payment of ${amount} AUD</h1>
+					<h1 class='paymenttext'>Please enter your payment details</h1>
+          <h3 class='paymenttext' id='paymentheader'>Payment amount of ${amount} AUD for the avatar below</h3>
           <fieldset className="FormGroup">
             <div className="FormRow">
               <CardElement options={CARD_OPTIONS}/>
@@ -96,7 +98,7 @@ export default function PaymentForm(props) {
         </form>
       :
       <div>
-        <h2>You just bought a NIFTYHEAD</h2>
+        <h1 class='paymenttext'>You just bought a NIFTYHEAD avatar!</h1>
       </div>
       }
     </>
