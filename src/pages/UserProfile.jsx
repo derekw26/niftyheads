@@ -15,6 +15,7 @@ class UserProfile extends Component {
     };
   }
 
+
   render() {
     const { currentUser } = this.state;
     console.log(currentUser.avatars)

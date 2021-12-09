@@ -20,7 +20,7 @@ const Filter = (props) => {
 
   return (
     <Paper sx={{ height: '100%', p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
-      <Grid container spacing={2}>
+      <Grid container alignItems='center' justifyContent="center" spacing={2}>
         <Grid item xs={12}>
           <Typography>
             <h3>Price</h3>

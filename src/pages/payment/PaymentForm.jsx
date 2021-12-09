@@ -5,12 +5,6 @@ import './PaymentForm.css'
 
 const SERVER_URL = "http://localhost:5000/"
 
-const appearance = {
-  theme: 'flat'
-};
-
-// Pass the appearance object to the Elements instance
-
 const CARD_OPTIONS = {
 	iconStyle: "solid",
 	style: {
@@ -31,7 +25,16 @@ const CARD_OPTIONS = {
 	}
 }
 
-export default function PaymentForm() {
+export default function PaymentForm(props) {
+
+  const avatar = props.avatar;
+  console.log(avatar)
+  const currentUser = props.currentUser;
+  console.log(currentUser.avatars)
+  const amount = props.amount;
+  const cleanAmount = parseFloat(amount.replace(/,/g, ''));
+  const amountInCents = Math.round(cleanAmount * 100);
+
 
   const [success, setSuccess] = useState(false);
   const stripe = useStripe();
@@ -45,18 +48,29 @@ export default function PaymentForm() {
       card: elements.getElement(CardElement)
     })
 
+
     if (!error) {
 
       try {
         const { id } = paymentMethod
         const response = await axios.post(SERVER_URL + 'payment', {
-          amount: 1000,
+          amount: amountInCents,
           id
         });
+
 
         if (response.data.success) {
           console.log("successful payment")
           setSuccess(true)
+
+          await axios.put(SERVER_URL + `avatars/${ avatar.uuid }`, {
+            "listed": false,
+            "userId": currentUser.id
+          });
+
+          currentUser.avatars.push(avatar);
+          localStorage.setItem("user", JSON.stringify(currentUser));
+
         }
 
       } catch (error) {
@@ -72,6 +86,7 @@ export default function PaymentForm() {
     <>
       {!success ?
         <form onSubmit={handleSubmit}>
+          <h1>Submitting payment of ${amount} AUD</h1>
           <fieldset className="FormGroup">
             <div className="FormRow">
               <CardElement options={CARD_OPTIONS}/>

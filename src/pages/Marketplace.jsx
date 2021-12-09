@@ -22,8 +22,10 @@ const Marketplace = (props) => {
     axios.get(SERVER_URL + 'avatars').then(res => {
       const avatars = res.data;
       setAvatars(avatars);
+      console.log(avatars);
     });
   }, []);
+
 
 
 
@@ -34,14 +36,14 @@ const Marketplace = (props) => {
 
   const selectedPriceRange = (values) => {
     setPriceRange(values);
-    console.log(values)
   }
 
 
   avatars.forEach(avatar => {
     if (collections.includes(avatar.category)
     && avatar.price > priceRange[0]
-    && avatar.price < priceRange[1]) {
+    && avatar.price < priceRange[1]
+    && avatar.listed) {
       displayAvatars.push(
         <Grid item xs={12} sm={12} md={6} lg={4}>
           <AvatarCard avatar={avatar} />
@@ -49,11 +51,6 @@ const Marketplace = (props) => {
       );
     }
   })
-
-
-  // if (!displayAvatars) {
-  //   return <LoadingCircle />
-  // }
 
   return(
     <div>

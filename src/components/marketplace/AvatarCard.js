@@ -34,7 +34,7 @@ const AvatarCard = (props) => {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Bot #100
+                { avatar.name }
               </Typography>
               <Typography variant="body2" gutterBottom>
                 { avatar.category } • JPEG

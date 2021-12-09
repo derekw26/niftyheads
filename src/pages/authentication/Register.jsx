@@ -126,7 +126,7 @@ class Register extends Component {
 
     return(
       <Grid>
-        <Paper elevation={10} style={paperStyle}>
+        <Paper elevation={5} style={paperStyle}>
           <Grid align='center'>
             <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
             <Typography>

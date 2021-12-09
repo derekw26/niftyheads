@@ -56,8 +56,6 @@ const Navbar = (props) => {
     settings = ['Register', 'Login'];
   }
 
-  console.log(currentUser);
-
   return (
     <AppBar position="static">
       <Container maxWidth="xl">

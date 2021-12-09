@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import Grid from '@mui/material/Grid';
@@ -17,9 +17,14 @@ const dollarAULocale = Intl.NumberFormat('en-AU');
 const AvatarProfile = (props) => {
 
   const avatarUuid = useParams().uuid
+  const currentUser = props.currentUser;
+  // const location = useLocation();
+  // const { avatar } = location.state;
+
   const [avatar, setAvatar] = useState({});
   const [creator, setCreator] = useState({});
-  const [ethToAudRate, setEthToAudRate] = useState(0);
+  const [ethToAudRate, setEthToAudRate] = useState(Infinity);
+  const [audPrice, setAudPrice] = useState(Infinity);
 
   useEffect(() => {
     axios(`${SERVER_URL}avatars/${avatarUuid}`)
@@ -34,15 +39,29 @@ const AvatarProfile = (props) => {
       .catch(error => console.log(error.response))
   }, []);
 
-  console.log(creator)
-
   useEffect(() => {
     axios('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=aud').then(res => {
       setEthToAudRate(res.data.ethereum.aud)
     })
   }, []);
 
-  // console.log(avatar.createdBy)
+  useEffect(() => {
+    setAudPrice(dollarAULocale.format(Number(avatar.price * ethToAudRate).toFixed(2)));
+  }, [setEthToAudRate, creator]);
+
+  console.log(audPrice)
+
+  // console.log(avatar.user.uuid)
+  // console.log(currentUser.uuid)
+
+  const controlsToListAvatar = () => {
+    console.log('can be listed')
+    if (avatar.user.uuid === currentUser.uuid) {
+      return (
+        <h1>this avatar can be listed</h1>
+      )
+    }
+  }
 
   return(
     <Grid container spacing={2} columns={{ xs: 6, sm: 6, md: 12 }}>
@@ -60,7 +79,7 @@ const AvatarProfile = (props) => {
               Collection: { avatar.category }
             </Typography>
             <Typography variant="h5" component="div">
-              Avatar Name
+              { avatar.name }
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
               Minted by: { creator.username }
@@ -83,18 +102,18 @@ const AvatarProfile = (props) => {
               { avatar.listed ? `${ avatar.price } ETH`: null }
             </Typography>
             <Typography variant="p" component="div">
-              { avatar.listed ? `= ${ dollarAULocale.format(Number(avatar.price * ethToAudRate).toFixed(2)) } AUD`: null }
+              { avatar.listed ? `= ${ audPrice } AUD`: null }
             </Typography>
           </CardContent>
           <CardActions>
-
             <Button size="large">
               { avatar.listed ?
-                <Link to={`/payment/${avatar.uuid}`}>
+                <Link to={`/avatars/${avatar.uuid}/pay`} state={{ amount:audPrice, avatar:avatar }}>
                   PURCHASE
                 </Link>
               : "NOT FOR SALE"}
             </Button>
+            { controlsToListAvatar }
           </CardActions>
         </Card>
       </Grid>

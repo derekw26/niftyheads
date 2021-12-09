@@ -81,7 +81,7 @@ class App extends Component {
 
   render() {
     const { currentUser, showAdminBoard, isLoading } = this.state;
-
+    console.log(currentUser)
 
     return (
       <ThemeProvider theme={theme}>
@@ -137,10 +137,10 @@ class App extends Component {
               <Route path="/marketplace" element={<Marketplace isLoading={isLoading}/>} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<UserProfile />} />
-              <Route path="/avatars/:uuid" element={<AvatarProfile />} />
+              <Route path="/avatars/:uuid" element={<AvatarProfile currentUser={currentUser} />} />
               <Route path="/user" element={<BoardUser />} />
               <Route path="/admin" element={<BoardAdmin />} />
-              <Route path="/payment/:uuid" element={<StripeContainer />} />
+              <Route path="/avatars/:uuid/pay" element={<StripeContainer currentUser={currentUser} />} />
             </Routes>
           </div>
         </div>
