@@ -16,6 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 const Navbar = (props) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const logOut = props.onLogOut;
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -32,22 +33,22 @@ const Navbar = (props) => {
     setAnchorElUser(null);
   };
 
-  const logOut = props.onLogOut;
 
-  const handleDropdownClick = (setting) => {
-    if (setting === "Logout") {
-      logOut();
-    }
-  };
+
+  // const handleDropdownClick = (setting) => {
+  //   if (setting === "Logout") {
+  //     logOut();
+  //   }
+  // };
 
   const currentUser = props.currentUser;
 
 
-  let pages = ['Marketplace', 'Create Avatar', 'My Avatars'];
+  let pages = ['Marketplace', 'Mint Avatar', 'Connect Wallet'];
   if (!currentUser) {
-    pages = ['Home', 'Marketplace'];
+    pages = [];
   } else if (currentUser.isAdmin) {
-    pages = [...pages, 'All Users'];
+    pages = [...pages, 'Admin'];
   }
 
   let settings = ['Profile', 'Logout'];
@@ -160,18 +161,18 @@ const Navbar = (props) => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                // <Link to={`/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
                   <MenuItem
                     key={setting}
                     onClick={handleCloseNavMenu}
                   >
                     <Typography
-                      onClick={() => handleDropdownClick(setting)} textAlign="center"
+                      textAlign="center"
                     >
                       {setting}
                     </Typography>
                   </MenuItem>
-                </Link>
+                // </Link>
               ))}
             </Menu>
           </Box>

@@ -5,9 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import _ from "lodash";
 
 import AuthService from "./services/authService"
-import Navbar from './components/Navbar'
-
 import Home from './pages/Home'
+import Navbar from './components/Navbar'
 import Login from './pages/authentication/Login'
 import Register from './pages/authentication/Register'
 import Marketplace from './pages/Marketplace'
@@ -17,7 +16,31 @@ import BoardUser from './components/BoardUser'
 import BoardAdmin from './components/BoardAdmin'
 import LoadingCircle from './components/LoadingCircle'
 
-const SERVER_URL = "http://localhost:5000/"
+import StripeContainer from './pages/payment/StripeContainer'
+
+import './App.css'
+
+
+import { green } from '@mui/material/colors';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+
+const theme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
+    },
+  },
+  typography: {
+    fontFamily: 'Readex Pro',
+  },
+})
+
+// const SERVER_URL = "http://localhost:5000/"
 
 class App extends Component {
 
@@ -28,18 +51,18 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       currentUser: undefined,
-      avatars: {},
+      // avatars: {},
       isLoading: true
     };
   }
 
   componentDidMount() {
 
-    axios.get(SERVER_URL + 'avatars').then(res => {
-      const avatars = res.data
-      this.setState({ avatars });
-      this.setState({ isLoading: false });
-    });
+    // axios.get(SERVER_URL + 'avatars').then(res => {
+    //   const avatars = res.data;
+    //   this.setState({ avatars });
+    //   this.setState({ isLoading: false });
+    // });
 
     const user = AuthService.getCurrentUser();
 
@@ -57,83 +80,71 @@ class App extends Component {
   }
 
   render() {
-    const { currentUser, showAdminBoard, avatars, isLoading } = this.state;
+    const { currentUser, showAdminBoard, isLoading } = this.state;
 
-    if (isLoading) {
-      return <LoadingCircle />
-    }
 
     return (
-      <div className="App">
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
-                Home
-              </Link>
-            </li>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <nav className="navbar navbar-expand navbar-dark bg-dark">
+            <div className="navbar-nav mr-auto">
 
-            {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
-                  Admin
-                </Link>
-              </li>
-            )}
 
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
+              {currentUser && (
+                <li className="nav-item">
+                  <Link to={"/user"} className="nav-link">
+                    User
+                  </Link>
+                </li>
+              )}
+            </div>
+
+            {currentUser ? (
+              <div className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to={"/profile"} className="nav-link">
+                    {currentUser.username}
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a href="/login" className="nav-link" onClick={this.logOut}>
+                    LogOut
+                  </a>
+                </li>
+              </div>
+            ) : (
+              <div className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to={"/login"} className="nav-link">
+                    Login
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to={"/register"} className="nav-link">
+                    Sign Up
+                  </Link>
+                </li>
+              </div>
             )}
+          </nav>
+
+          <Navbar currentUser={currentUser} onLogOut={this.logOut} />
+          <div className="container mt-3">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/marketplace" element={<Marketplace isLoading={isLoading}/>} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/avatars/:uuid" element={<AvatarProfile />} />
+              <Route path="/user" element={<BoardUser />} />
+              <Route path="/admin" element={<BoardAdmin />} />
+              <Route path="/payment/:uuid" element={<StripeContainer />} />
+            </Routes>
           </div>
-
-          {currentUser ? (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={this.logOut}>
-                  LogOut
-                </a>
-              </li>
-            </div>
-          ) : (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/login"} className="nav-link">
-                  Login
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to={"/register"} className="nav-link">
-                  Sign Up
-                </Link>
-              </li>
-            </div>
-          )}
-        </nav>
-
-        <Navbar currentUser={currentUser} onLogOut={this.logOut} />
-        <div className="container mt-3">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/marketplace" element={<Marketplace avatars={avatars} isLoading={isLoading}/>} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/avatars/:avatarUuid" element={<AvatarProfile />} />
-            <Route path="/user" element={<BoardUser />} />
-            <Route path="/admin" element={<BoardAdmin />} />
-          </Routes>
         </div>
-      </div>
+      </ThemeProvider>
     );
   }
 }

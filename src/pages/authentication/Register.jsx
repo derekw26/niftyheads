@@ -13,8 +13,8 @@ import { isEmail } from "validator";
 
 import AuthService from "../../services/authService";
 
-const paperStyle={padding :20,height:'70%', width:280, margin:"20px auto"}
-const avatarStyle={backgroundColor:'primary'}
+const paperStyle={padding :20, height:'70%', width:280, margin:"20px auto"}
+const avatarStyle={backgroundColor:'primary', margin: "10px auto"}
 const btnstyle={margin:'8px 0'}
 
 class Register extends Component {
@@ -129,7 +129,9 @@ class Register extends Component {
         <Paper elevation={10} style={paperStyle}>
           <Grid align='center'>
             <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
-            <h2>Sign Up for NIFTYHEADS</h2>
+            <Typography>
+              <h3>Sign Up for NIFTYHEADS</h3>
+            </Typography>
           </Grid>
           <Form
             onSubmit={this.handleRegister}

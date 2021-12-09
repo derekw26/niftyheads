@@ -1,0 +1,51 @@
+/* Left column */
+.leftcolumn {
+  float: left;
+  width: 25%;
+}
+
+/* Right column */
+.rightcolumn {
+  float: left;
+  width: 75%;
+  padding-left: 20px;
+  height: 100vh;
+  overflow: auto;
+}
+
+.marketplacetitle {
+  text-align: left;
+}
+
+
+@media screen and (max-width: 1200px) {
+  .leftcolumn {
+    width: 40%;
+    padding: 0;
+  }
+
+  .rightcolumn {
+    width: 60%;
+    padding: 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .leftcolumn, .rightcolumn {
+    width: 100%;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .marketplacetitle {
+    text-align: center;
+  }
+
+}
+
+#noresults {
+  margin: 0 auto;
+  vertical-align: middle;
+  position: relative;
+  margin-top: 30vh;
+}

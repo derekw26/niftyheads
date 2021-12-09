@@ -14,7 +14,7 @@ import CheckButton from "react-validation/build/button";
 import AuthService from "../../services/authService";
 
 const paperStyle={padding :20, height:'70%', width:280, margin:"20px auto"}
-const avatarStyle={backgroundColor:'primary'}
+const avatarStyle={backgroundColor:'primary', margin: "10px auto"}
 const btnstyle={margin:'8px 0'}
 
 class Login extends Component {
@@ -96,7 +96,9 @@ class Login extends Component {
         <Paper elevation={10} style={paperStyle}>
           <Grid align='center'>
             <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
-            <h2>Sign In</h2>
+            <Typography>
+              <h3>Sign In</h3>
+            </Typography>
           </Grid>
           <Form
             onSubmit={this.handleLogin}
@@ -163,9 +165,9 @@ class Login extends Component {
               }}
             />
           </Form>
-          <Typography>
+          <Typography variant="body2">
             <span>Don't have an account? </span>
-            <Link href="/signup" >
+            <Link href="/register" >
               Sign Up
             </Link>
           </Typography>

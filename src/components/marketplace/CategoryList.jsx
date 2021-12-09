@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -7,8 +7,8 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
 
-export default function CategoryList() {
-  const [checked, setChecked] = React.useState([1]);
+export default function CategoryList(props) {
+  const [checked, setChecked] = useState([1]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -23,9 +23,26 @@ export default function CategoryList() {
     setChecked(newChecked);
   };
 
+  const avatarCategories =
+  [
+    'adventurer',
+    'avataaars',
+    'big-ears',
+    'big-smile',
+    'bottts',
+    'croodles',
+    'micah',
+    'miniavs',
+    'open-peeps',
+    'personas',
+    'pixel-art'
+  ]
+
+  props.onChange(checked)
+
   return (
     <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {[0, 1, 2, 3].map((value) => {
+      {avatarCategories.map((value) => {
         const labelId = `checkbox-list-secondary-label-${value}`;
         return (
           <ListItem
@@ -43,11 +60,11 @@ export default function CategoryList() {
             <ListItemButton>
               <ListItemAvatar>
                 <Avatar
-                  alt={`Avatar n°${value + 1}`}
-                  src={`/static/images/avatar/${value + 1}.jpg`}
+                  alt={`${value}`}
+                  src={`https://avatars.dicebear.com/api/${value}/avatar.svg`}
                 />
               </ListItemAvatar>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`${value}`} />
             </ListItemButton>
           </ListItem>
         );

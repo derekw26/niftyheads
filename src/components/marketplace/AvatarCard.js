@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
-import _ from "lodash";
+// import _ from "lodash";
 
 const Img = styled('img')({
   margin: 'auto',
@@ -15,16 +15,18 @@ const Img = styled('img')({
 });
 
 const AvatarCard = (props) => {
+
+  const avatar = props.avatar;
+
   return (
     <Paper sx={{ p: 2, margin: 'auto', maxWidth: 500, flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item>
           <Link
-            to={`/avatars/${props.uuid}`}
-            state={{from}}
+            to={`/avatars/${avatar.uuid}`}
           >
             <ButtonBase sx={{ width: 128, height: 128 }}>
-              <Img alt="complex" src={ props.url } />
+              <Img alt="complex" src={ avatar.url } />
             </ButtonBase>
           </Link>
         </Grid>
@@ -32,24 +34,24 @@ const AvatarCard = (props) => {
           <Grid item xs container direction="column" spacing={2}>
             <Grid item xs>
               <Typography gutterBottom variant="subtitle1" component="div">
-                Bot #{ Math.floor(Math.random()*1000) }
+                Bot #100
               </Typography>
               <Typography variant="body2" gutterBottom>
-                Full resolution 1920x1080 • JPEG
+                { avatar.category } • JPEG
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                ID: 1030114
+                Contract: { avatar.uuid }
               </Typography>
             </Grid>
             <Grid item>
               <Typography sx={{ cursor: 'pointer' }} variant="body2">
-                Remove
+                Inspect
               </Typography>
             </Grid>
           </Grid>
           <Grid item>
             <Typography variant="subtitle1" component="div">
-              { props.price } ETH
+              { avatar.listed ? avatar.price + ' ETH' : 'Unlisted'}
             </Typography>
           </Grid>
         </Grid>
